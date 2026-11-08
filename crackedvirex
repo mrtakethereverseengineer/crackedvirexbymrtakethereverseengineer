@@ -1,3 +1,14 @@
+--[[
+	VIREX HUB UI v2  —  LocalScript
+	Colócalo en: StarterPlayer > StarterPlayerScripts
+
+	Eventos para TU lógica:
+		shared.VIREX.Changed:Connect(function(id, value) ... end)
+		shared.VIREX.Flags.AutoParry  --> true / false
+
+	RightShift = abrir / cerrar.  Al cerrar aparece tu logo (arrastrable).
+	Sonidos: edita la tabla SFX (puedes poner tus propios rbxassetid).
+]]
 
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
@@ -14,7 +25,7 @@ if playerGui:FindFirstChild("VIREX") then
 	playerGui.VIREX:Destroy()
 end
 
-local LOGO = "rbxassetid://120685023653510"
+local LOGO = "rbxassetid://107391174248131"
 
 ----------------------------------------------------------------------
 -- TEMA
@@ -227,7 +238,7 @@ local Changed = Instance.new("BindableEvent")
 shared.VIREX = { Flags = Flags, Changed = Changed.Event }
 
 local gui = new("ScreenGui", {
-	Name = "DEZ DEOBFUSCATES",
+	Name = "VIREX",
 	ResetOnSpawn = false,
 	IgnoreGuiInset = true,
 	DisplayOrder = 50,
@@ -414,7 +425,7 @@ local CONFIG = {
 	{
 		name = "Immortal",
 		icon = "♾",
-		groups = { G("Immortal", "left", { T("virex_immortal", "cracked Immortal") }) },
+		groups = { G("Immortal", "left", { T("virex_immortal", "VIREX Immortal") }) },
 	},
 }
 
@@ -861,7 +872,7 @@ end)
 
 -- VIREX en medio arriba: rojo + brillo blanco derecha → izquierda
 local title = label(top, {
-	Text = "DEZ DEOBFUSCATES",
+	Text = "VIREX",
 	Font = Enum.Font.Michroma,
 	TextSize = 22,
 	AnchorPoint = Vector2.new(0.5, 0.5),
@@ -869,17 +880,6 @@ local title = label(top, {
 	Size = UDim2.new(0, 170, 1, 0),
 })
 shineText(title, 2.0)
-
-local dez_description = label(top, {
-	Text = "this script stole my stuff so im releasing this",
-	Font = Enum.Font.Gotham,
-	TextSize = 9,
-	TextColor3 = C.muted,
-	AnchorPoint = Vector2.new(0.5, 0),
-	Position = UDim2.new(0.5, 0, 1, -2),
-	Size = UDim2.new(0, 360, 0, 16),
-	TextXAlignment = Enum.TextXAlignment.Center,
-})
 
 local closeBtn = new("TextButton", {
 	AnchorPoint = Vector2.new(1, 0.5),
@@ -1390,7 +1390,7 @@ task.spawn(function()
 
 	-- VIREX entra desde la izquierda, HUB desde la derecha
 	local vlab = label(holder, {
-		Text = "DEZ DEOBFUSCATES",
+		Text = "VIREX",
 		Font = Enum.Font.Michroma,
 		TextSize = 58,
 		TextTransparency = 1,
@@ -1496,7 +1496,7 @@ task.spawn(function()
 
 	ready = true
 	setOpen(true)
-	notify("cracked HUB cargado  •  RightShift abre/cierra", C.purple)
+	notify("VIREX HUB cargado  •  RightShift abre/cierra", C.purple)
 
 	task.wait(0.4)
 	holder:Destroy()
@@ -1535,7 +1535,7 @@ local core_gui = _cloneref(game:GetService('CoreGui'))
 local debris = _cloneref(game:GetService('Debris'))
 
 -- VIREX visual theme (presentation only)
-local VIREX_BG = Color3.fromRGB(0, 0, 0)
+local VIREX_BG = Color3.fromRGB(12, 13, 17)
 local VIREX_PANEL = Color3.fromRGB(18, 19, 24)
 local VIREX_PANEL_2 = Color3.fromRGB(22, 23, 29)
 local VIREX_HOVER = Color3.fromRGB(30, 31, 39)
@@ -1946,7 +1946,114 @@ function library._init(self: _runtime)
 
 	self._ui = _main
 
-	-- Loading screen removed; the main interface opens directly.
+	-- Premium loading animation. Presentation only; existing controls and callbacks stay intact.
+	local loading = create_new('Frame', {
+		Name = '_virex_loading',
+		BackgroundColor3 = VIREX_BG,
+		Size = _new_udim2(1, 0, 1, 0),
+		BorderSizePixel = 0,
+		ZIndex = 1000,
+		Parent = _main,
+	})
+
+	local loading_scale = create_new('UIScale', {
+		Scale = 0.94,
+		Parent = loading,
+	})
+
+	local loading_title = create_label({
+		AnchorPoint = _new_vector2(0.5, 0.5),
+		Position = _new_udim2(0.5, 0, 0.5, -24),
+		Size = _new_udim2(0, 320, 0, 48),
+		Text = 'VIREX',
+		TextColor3 = VIREX_TEXT,
+		TextSize = 34,
+		TextXAlignment = Enum.TextXAlignment.Center,
+		ZIndex = 1002,
+		Parent = loading,
+	})
+
+	create_new('UIGradient', {
+		Color = ColorSequence.new({
+			ColorSequenceKeypoint.new(0, VIREX_ACCENT),
+			ColorSequenceKeypoint.new(0.5, VIREX_TEXT),
+			ColorSequenceKeypoint.new(1, VIREX_PURPLE),
+		}),
+		Parent = loading_title,
+	})
+
+	local loading_subtitle = create_label({
+		AnchorPoint = _new_vector2(0.5, 0.5),
+		Position = _new_udim2(0.5, 0, 0.5, 18),
+		Size = _new_udim2(0, 320, 0, 24),
+		Text = 'INITIALIZING INTERFACE',
+		TextColor3 = VIREX_MUTED,
+		TextSize = 11,
+		TextXAlignment = Enum.TextXAlignment.Center,
+		ZIndex = 1002,
+		Parent = loading,
+	})
+
+	local loading_track = create_new('Frame', {
+		AnchorPoint = _new_vector2(0.5, 0.5),
+		Position = _new_udim2(0.5, 0, 0.5, 54),
+		Size = _new_udim2(0, 210, 0, 4),
+		BackgroundColor3 = VIREX_PANEL_2,
+		BorderSizePixel = 0,
+		ZIndex = 1002,
+		Parent = loading,
+	})
+	create_pill(loading_track)
+
+	local loading_fill = create_new('Frame', {
+		Size = _new_udim2(0, 0, 1, 0),
+		BackgroundColor3 = VIREX_ACCENT,
+		BorderSizePixel = 0,
+		ZIndex = 1003,
+		Parent = loading_track,
+	})
+	create_pill(loading_fill)
+
+	local loading_status = create_label({
+		AnchorPoint = _new_vector2(0.5, 0.5),
+		Position = _new_udim2(0.5, 0, 0.5, 78),
+		Size = _new_udim2(0, 320, 0, 20),
+		Text = 'LOADING 0%',
+		TextColor3 = Color3.fromRGB(115, 118, 128),
+		TextSize = 10,
+		TextXAlignment = Enum.TextXAlignment.Center,
+		ZIndex = 1002,
+		Parent = loading,
+	})
+
+	_create_tween(tween_service, loading_scale, _new_tween_info(0.65, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+		Scale = 1,
+	}):Play()
+	_create_tween(tween_service, loading_fill, _new_tween_info(1.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+		Size = _new_udim2(1, 0, 1, 0),
+	}):Play()
+
+	task.spawn(function()
+		for _, percent in {25, 50, 75, 100} do
+			task.wait(0.28)
+			if loading_status.Parent then
+				loading_status.Text = `LOADING {percent}%`
+			end
+		end
+		task.wait(0.25)
+		if loading.Parent then
+			for _, object in {loading, loading_title, loading_subtitle, loading_status, loading_track, loading_fill} do
+				local property = object:IsA('TextLabel') and 'TextTransparency' or 'BackgroundTransparency'
+				_create_tween(tween_service, object, _new_tween_info(0.35, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {
+					[property] = 1,
+				}):Play()
+			end
+			task.wait(0.4)
+			if loading.Parent then
+				loading:Destroy()
+			end
+		end
+	end)
 
 	local container = create_new('Frame', {
 		BackgroundColor3 = VIREX_BG,
@@ -2084,13 +2191,16 @@ function library._init(self: _runtime)
 	toggle_outline.Thickness = 1.5
 
 	-- VIREX VX mark: replaces the old icon while keeping the same open/close button.
-	local vx_logo = create_new('ImageLabel', {
+	local vx_logo = create_new('TextLabel', {
 		BackgroundTransparency = 1,
 		AnchorPoint = _new_vector2(0.5, 0.5),
 		Position = _new_udim2(0.5, 0, 0.5, 0),
 		Size = _new_udim2(1, -8, 1, -8),
-		Image = 'rbxassetid://120685023653510',
-		ScaleType = Enum.ScaleType.Fit,
+		Text = 'VX',
+		TextColor3 = VIREX_TEXT,
+		TextSize = 15,
+		TextXAlignment = Enum.TextXAlignment.Center,
+		TextYAlignment = Enum.TextYAlignment.Center,
 		ZIndex = 101,
 		Parent = mobile_toggle,
 	})
@@ -2164,7 +2274,7 @@ task.spawn(function()
 	create_label({
 		Position = _new_udim2(0, (10 + 10), 0, 0),
 		Size = _new_udim2(1, -((10 + 10) + 10), 1, 0),
-		Text = 'cracked',
+		Text = 'VIREX',
 		TextColor3 = VIREX_TEXT,
 		TextSize = self._is_mobile and 18 or 17,
 		TextXAlignment = Enum.TextXAlignment.Left,
